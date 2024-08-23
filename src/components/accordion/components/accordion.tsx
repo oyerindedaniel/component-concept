@@ -1,29 +1,33 @@
 import React, {
   createContext,
-  useState,
-  useCallback,
+  MutableRefObject,
   PropsWithChildren,
   useMemo,
+  useState,
 } from "react";
+import { useLatestValue } from "../../../hooks";
+import { defaultTriggers } from "../constants";
+import { useCombineActivators } from "../hooks";
+import { Active, IdType, SyntheticListener } from "../types";
+import AccordionContent from "./accordion-content";
 import AccordionItem from "./accordion-item";
-
-type IdType = string;
+import AccordionTrigger from "./accordion-trigger";
 
 interface ValueType {
   id: IdType;
-  isActive: boolean;
+  node: MutableRefObject<HTMLElement | null>;
 }
 
 type AccordionMap = Map<IdType, ValueType>;
 
 interface AccordionProps extends PropsWithChildren {
-  type?: "single";
+  type?: "single" | "multiple";
 }
 
 export interface AccordionContextType {
-  isCollapsed: boolean;
-  toggleCollapse: () => void;
   accordionItems: AccordionMap;
+  active: Active | null;
+  activators: SyntheticListener[];
 }
 
 export const AccordionContext = createContext<AccordionContextType | undefined>(
@@ -38,28 +42,39 @@ const AccordionProvider: React.FC<AccordionProps> = ({
     () => new Map<IdType, ValueType>(),
     []
   );
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [active, setActive] = useState<Active | null>(null);
+  const activeIdRef = useLatestValue(active);
 
-  const toggleCollapse = useCallback(() => {
-    setIsCollapsed((prevState) => !prevState);
-  }, []);
+  function getSyntheticHandler(
+    handler: (event: React.SyntheticEvent) => boolean
+  ): SyntheticListener["handler"] {
+    return (event: React.SyntheticEvent, id: IdType) => {
+      console.log(event, id, accordionItems.get(id));
+
+      const node = accordionItems.get(id)?.node;
+
+      setActive((prev) => (prev?.id === id ? null : { id }));
+    };
+  }
+
+  const activators = useCombineActivators(defaultTriggers, getSyntheticHandler);
 
   const contextValue = useMemo(
     () => ({
-      isCollapsed,
-      toggleCollapse,
       accordionItems,
+      active,
+      activators,
     }),
-    [accordionItems, isCollapsed, toggleCollapse]
+    [accordionItems, active, activators]
   );
 
   return (
     <AccordionContext.Provider value={contextValue}>
-      {children}
+      <div className="flex flex-col gap-5">{children}</div>
     </AccordionContext.Provider>
   );
 };
 
 const Accordion = AccordionProvider;
 
-export { Accordion, AccordionItem };
+export { Accordion, AccordionContent, AccordionItem, AccordionTrigger };

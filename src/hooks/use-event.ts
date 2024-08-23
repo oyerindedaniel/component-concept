@@ -1,6 +1,6 @@
 import { useCallback, useRef } from "react";
 
-import { useIsomorphicLayoutEffect } from "./use-isometric-effect";
+import { useIsomorphicLayoutEffect } from "./use-Isomorphic-layout-effect";
 
 export function useEvent<T extends Function>(handler: T | undefined) {
   const handlerRef = useRef<T | undefined>(handler);
