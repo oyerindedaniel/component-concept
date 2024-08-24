@@ -23,7 +23,7 @@ const AccordionTrigger = forwardRef<HTMLButtonElement, AccordionTriggerProps>(
     return (
       <button
         ref={ref}
-        className={classNames("bg-white bg-gray-800 w-full", className)}
+        className={classNames("bg-white bg-gray-800 w-[300px]", className)}
         {...listeners}
         {...rest}
       >

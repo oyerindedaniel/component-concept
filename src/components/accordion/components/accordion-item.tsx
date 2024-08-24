@@ -21,14 +21,14 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
       if (newElement) {
         const accordionContent = newElement.querySelector(".content");
 
-        if (accordionContent) {
-          const contentElement = accordionContent as HTMLElement;
-          const accordionContentHeight = contentElement.scrollHeight;
-          contentElement.style.setProperty(
-            "--accordion-content-height",
-            `${accordionContentHeight}px`
-          );
-        }
+        // if (accordionContent) {
+        //   const contentElement = accordionContent as HTMLElement;
+        //   const accordionContentHeight = contentElement.scrollHeight;
+        //   contentElement.style.setProperty(
+        //     "--accordion-content-height",
+        //     `${accordionContentHeight}px`
+        //   );
+        // }
       }
     }
   );
