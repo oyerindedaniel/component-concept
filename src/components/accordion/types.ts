@@ -1,3 +1,5 @@
+import { MutableRefObject } from "react";
+
 export type SyntheticEventName = keyof Omit<
   React.DOMAttributes<any>,
   "children" | "dangerouslySetInnerHTML"
@@ -17,4 +19,9 @@ export type SyntheticListener = {
 
 export interface Active {
   id: IdType;
+}
+
+export interface ValueType {
+  id: IdType;
+  node: MutableRefObject<HTMLElement | null>;
 }

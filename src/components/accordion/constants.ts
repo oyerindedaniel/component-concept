@@ -1,5 +1,5 @@
-import { Trigger } from "./types";
-import { SyntheticEventName } from "./types";
+import { AccordionContextType } from "./components/accordion";
+import { IdType, SyntheticEventName, Trigger, ValueType } from "./types";
 
 // Array of default triggers
 export const defaultTriggers: Trigger[] = [
@@ -21,4 +21,10 @@ export const isValidTrigger = (event: React.SyntheticEvent): boolean => {
   );
 
   return trigger ? (trigger.handler ? trigger.handler(event) : true) : false;
+};
+
+export const defaultAccordionContext: AccordionContextType = {
+  accordionItems: new Map<IdType, ValueType>(),
+  active: [{ id: "" }],
+  activators: [],
 };
